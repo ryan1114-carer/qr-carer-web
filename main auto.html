@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>qr carer auto</title>
+  <script>
+    window.onload = function () {
+      const lang = navigator.language || navigator.userLanguage;
+      const lowerLang = lang.toLowerCase();
+      let url = "https://ryan1114-carer.github.io/qr-carer-web/qr%20carer%20web"; // 預設
+
+      if (lowerLang.startsWith("zh-tw")) {
+        url = "https://ryan1114-carer.github.io/qr-carer-web/main%20tw";
+      } else if (lowerLang.startsWith("zh") || lowerLang.startsWith("zh-cn")) {
+        url = "https://ryan1114-carer.github.io/qr-carer-web/main%20ch";
+      } else if (lowerLang.startsWith("en")) {
+        url = "https://ryan1114-carer.github.io/qr-carer-web/qr%20carer%20web";
+      } else if (lowerLang.startsWith("ja")) {
+        url = "https://ryan1114-carer.github.io/qr-carer-web/main%20jp";
+      } else if (lowerLang.startsWith("ko")) {
+        url = "https://ryan1114-carer.github.io/qr-carer-web/main%20sk";
+      }
+
+      window.location.href = url;
+    };
+  </script>
+</head>
+<body>
+  <p>Redirecting based on your browser language...</p>
+</body>
+</html>
