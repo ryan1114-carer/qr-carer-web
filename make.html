@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>qr carer qrcode make</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/ryan1114-carer/qr-carer-web/refs/heads/main/qr_carer_make.png" type="image/png">
+  <style>
+    body {
+      background-color: #effff0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      max-width: 400px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    .generate-btn {
+      background-color: #2eaf4a;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #aaa;
+      cursor: pointer;
+    }
+
+    .qr-output {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>qr carer qrcode make</h1>
+  <input type="text" id="qrText" placeholder="Please enter url,text">
+  <br>
+  <button class="generate-btn" onclick="generateQR()">Production</button>
+  <div class="qr-output" id="qrOutput"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script>
+    function generateQR() {
+      const text = document.getElementById('qrText').value.trim();
+      const output = document.getElementById('qrOutput');
+      output.innerHTML = '';
+
+      if (!text) {
+        output.innerHTML = '<p style="color: red;">Please enter url,text</p>';
+        return;
+      }
+
+      QRCode.toDataURL(text, { width: 256, margin: 1 }, function (err, url) {
+        if (err) return console.error(err);
+        const img = document.createElement('img');
+        img.src = url;
+        output.appendChild(img);
+      });
+    }
+  </script>
+</body>
+</html>
