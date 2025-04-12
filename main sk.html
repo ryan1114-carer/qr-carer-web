@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>qr carer-대한민국</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/ryan1114-carer/carer-img/refs/heads/main/qr_carer.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      background-color: #effff0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .app-bar {
+      background-color: #fff;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .app-bar span {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .download-btn {
+      background-color: #2eaf4a;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #aaa;
+      cursor: pointer;
+    }
+
+    .close-btn {
+      background-color: #2eaf4a;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #aaa;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: space-between;
+      background-color: white;
+      padding: 5px;
+    }
+
+    .top-button {
+      flex: 1;
+      min-width: 50px;
+      padding: 10px 0;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      margin: 0 2px;
+      cursor: pointer;
+    }
+
+    .qr img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .yt { background-color: red; }
+    .fb { background-color: #2196f3; }
+    .dc { background-color: #673ab7; }
+    .ig { background-color: #ff00ff; }
+    .exit { background-color: #4caf50; }
+
+    .content {
+      margin-top: 80px;
+    }
+
+    .status {
+      font-size: 18px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: black;
+    }
+
+    .scan-btn {
+      background-color: #2eaf4a;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #aaa;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #videoContainer {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      justify-content: center;
+      align-items: center;
+      background-color: black;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    #videoElement {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .scan-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: red;
+      z-index: 10000;
+    }
+  </style>
+</head>
+<body onload="checkAppInstalled()">
+
+  <div class="app-bar" id="appBar">
+    <span>우리 앱도 한번 사용해 보세요!</span>
+    <button class="download-btn" onclick="handleDownload()">ダウンロード</button>
+    <button class="close-btn" onclick="document.getElementById('appBar').style.display='none'">X</button>
+  </div>
+
+  <div class="top-bar">
+    <div class="top-button qr">
+      <img src="https://raw.githubusercontent.com/ryan1114-carer/carer-img/refs/heads/main/qr_carer.png" alt="웹사이트 아이콘">
+    </div>
+    <div class="top-button yt" onclick="window.location.href='https://www.youtube.com/@Cousin_Bear-app'">yt</div>
+    <div class="top-button fb" onclick="window.location.href='https://www.facebook.com/share/1EpM4fFY1c/'">페이스북</div>
+    <div class="top-button dc" onclick="window.location.href='https://discord.gg/THTGwS3mJW'">dc</div>
+    <div class="top-button ig" onclick="window.location.href='https://www.instagram.com/cousin_bear_app?igsh=MWhtOXRhNDNwcnNjaw=='">ig</div>
+    <div class="top-button exit" onclick="window.close()">떠나다</div>
+  </div>
+
+  <div class="content">
+    <div class="status" id="status">링크나 바코드가 없습니다</div>
+    <button class="scan-btn" onclick="scanCode()" id="scanBtn">스캐닝</button>
+    <div id="linkArea"></div>
+  </div>
+
+  <div id="videoContainer">
+    <video id="videoElement" autoplay playsinline></video>
+    <div class="scan-line"></div>
+  </div>
+
+  <script src="https://unpkg.com/@zxing/library@latest"></script>
+  <script>
+    function isUrl(text) {
+      try {
+        new URL(text);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function checkAppInstalled() {
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = 'intent://scan/#Intent;package=com.carer.qr_carer;scheme=qr;end';
+      document.body.appendChild(iframe);
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+      }, 1500);
+    }
+
+    function handleDownload() {
+      checkAppInstalled();
+      window.open('https://apkpure.com/tw/qr-carer/com.carer.qr_carer');
+    }
+
+    async function scanCode() {
+      const status = document.getElementById('status');
+      const linkArea = document.getElementById('linkArea');
+      const video = document.getElementById('videoElement');
+      const videoContainer = document.getElementById('videoContainer');
+      linkArea.innerHTML = '';
+      status.textContent = 'scanning';
+      videoContainer.style.display = 'flex';
+
+      const codeReader = new ZXing.BrowserMultiFormatReader();
+      let stream;
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        video.srcObject = stream;
+
+        codeReader.decodeFromVideoDevice(undefined, 'videoElement', (result, err) => {
+          if (result) {
+            const code = result.getText();
+            stream.getTracks().forEach(track => track.stop());
+            codeReader.reset();
+            videoContainer.style.display = 'none';
+
+            if (/^\d+$/.test(code)) {
+              status.textContent = 'scanning';
+            } else if (isUrl(code)) {
+              status.textContent = code;
+              const btn = document.createElement('button');
+              btn.className = 'scan-btn';
+              btn.textContent = 'リ」링크 열기';
+              btn.onclick = () => window.open(code, '_blank');
+              linkArea.appendChild(btn);
+            } else {
+              status.textContent = code;
+            }
+          }
+        });
+      } catch (err) {
+        alert('Error: ' + err);
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+        }
+        videoContainer.style.display = 'none';
+      }
+    }
+  </script>
+
+</body>
+</html>
