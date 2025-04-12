@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>qr carer web</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/ryan1114-carer/carer-img/refs/heads/main/qr_carer.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      background-color: #effff0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .top-bar {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      justify-content: space-between;
+      background-color: white;
+      padding: 5px;
+    }
+
+    .top-button {
+      flex: 1;
+      min-width: 50px;
+      padding: 10px 0;
+      color: white;
+      font-weight: bold;
+      border-radius: 5px;
+      margin: 0 2px;
+      cursor: pointer;
+    }
+
+    .qr img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .yt { background-color: red; }
+    .fb { background-color: #2196f3; }
+    .dc { background-color: #673ab7; }
+    .ig { background-color: #ff00ff; }
+    .exit { background-color: #4caf50; }
+
+    .content {
+      margin-top: 80px;
+    }
+
+    .status {
+      font-size: 18px;
+      margin-bottom: 20px;
+      font-weight: bold;
+      color: black;
+    }
+
+    .scan-btn, .link-btn {
+      background-color: #2eaf4a;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #aaa;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #videoContainer {
+      display: none;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    #videoElement {
+      width: 100%;
+      max-width: 400px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <div class="top-button qr">
+      <img src="https://raw.githubusercontent.com/ryan1114-carer/carer-img/refs/heads/main/qr_carer.png" alt="qr">
+    </div>
+    <div class="top-button yt" onclick="window.location.href='https://www.youtube.com/@Cousin_Bear-app'">yt</div>
+    <div class="top-button fb" onclick="window.location.href='https://www.facebook.com/share/1EpM4fFY1c/'">fb</div>
+    <div class="top-button dc" onclick="window.location.href='https://discord.gg/THTGwS3mJW'">dc</div>
+    <div class="top-button ig" onclick="window.location.href='https://www.instagram.com/cousin_bear_app?igsh=MWhtOXRhNDNwcnNjaw=='">ig</div>
+    <div class="top-button exit" onclick="window.close()">exit</div>
+  </div>
+
+  <div class="content">
+    <div class="status" id="status">no link</div>
+    <button class="scan-btn" onclick="scanCode()" id="scanBtn">scanning</button>
+    <div id="linkArea"></div>
+    <div id="videoContainer">
+      <video id="videoElement" autoplay playsinline></video>
+    </div>
+  </div>
+
+  <script>
+    function isUrl(text) {
+      try {
+        new URL(text);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    function scanCode() {
+      if (!('BarcodeDetector' in window)) {
+        alert('This browser does not support Barcode scanning.');
+        return;
+      }
+
+      const barcodeDetector = new BarcodeDetector({ formats: ['qr_code'] });
+      const video = document.getElementById('videoElement');
+      const videoContainer = document.getElementById('videoContainer');
+      videoContainer.style.display = 'flex';
+
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', zoom: true } })
+        .then((stream) => {
+          video.srcObject = stream;
+          video.setAttribute('playsinline', 'true');
+          video.play();
+
+          const checkScan = () => {
+            barcodeDetector.detect(video).then(barcodes => {
+              if (barcodes.length > 0) {
+                const result = barcodes[0].rawValue;
+                const status = document.getElementById('status');
+                const linkArea = document.getElementById('linkArea');
+                linkArea.innerHTML = '';
+
+                stream.getTracks().forEach(track => track.stop());
+                videoContainer.style.display = 'none';
+
+                if (/^\d+$/.test(result)) {
+                  status.textContent = 'scanning';
+                } else if (isUrl(result)) {
+                  status.textContent = result;
+                  const btn = document.createElement('button');
+                  btn.className = 'link-btn';
+                  btn.textContent = 'open link';
+                  btn.onclick = () => window.open(result, '_blank');
+                  linkArea.appendChild(btn);
+                } else {
+                  status.textContent = result;
+                }
+              } else {
+                requestAnimationFrame(checkScan);
+              }
+            }).catch(console.error);
+          };
+
+          checkScan();
+        })
+        .catch(err => alert('error: ' + err));
+    }
+  </script>
+
+</body>
+</html>
