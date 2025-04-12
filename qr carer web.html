@@ -13,6 +13,46 @@
       text-align: center;
     }
 
+    .app-bar {
+      background-color: #fff;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .app-bar span {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .download-btn {
+      background-color: #2eaf4a;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #aaa;
+      cursor: pointer;
+    }
+
+    .close-btn {
+      background-color: #2eaf4a;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 14px;
+      font-weight: bold;
+      border-radius: 5px;
+      box-shadow: 1px 1px 5px #aaa;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
     .top-bar {
       display: flex;
       flex-wrap: nowrap;
@@ -55,7 +95,7 @@
       color: black;
     }
 
-    .scan-btn, .link-btn {
+    .scan-btn {
       background-color: #2eaf4a;
       color: white;
       border: none;
@@ -97,6 +137,12 @@
   </style>
 </head>
 <body>
+
+  <div class="app-bar" id="appBar">
+    <span>Why not try our app bar!</span>
+    <button class="download-btn" onclick="window.open('https://apkpure.com/tw/qr-carer/com.carer.qr_carer')">download</button>
+    <button class="close-btn" onclick="document.getElementById('appBar').style.display='none'">X</button>
+  </div>
 
   <div class="top-bar">
     <div class="top-button qr">
