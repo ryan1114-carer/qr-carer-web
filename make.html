@@ -14,7 +14,7 @@
     }
 
     h1 {
-      color: #333;
+      color: #2eaf4a;
     }
 
     input[type="text"] {
@@ -45,7 +45,7 @@
   </style>
 </head>
 <body>
-  <h1>qr carer qrcode make</h1>
+  <h1 id="title">qr carer qrcode make</h1>
   <input type="text" id="qrText" placeholder="Please enter url,text">
   <br>
   <button class="generate-btn" onclick="generateQR()">Production</button>
@@ -63,13 +63,87 @@
         return;
       }
 
-      QRCode.toDataURL(text, { width: 256, margin: 1 }, function (err, url) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const color = urlParams.get("color");
+      const lang = urlParams.get("lang") || navigator.language;
+
+      let themeColor = "#2eaf4a"; // default green
+      let bgColor = "#effff0";
+
+      switch (color) {
+        case "red":
+          themeColor = "#b30000";
+          bgColor = "#fff0f0";
+          break;
+        case "blue":
+          themeColor = "#007BFF";
+          bgColor = "#e6f0ff";
+          break;
+        case "yellow":
+          themeColor = "#e6b800";
+          bgColor = "#fffbe6";
+          break;
+        case "purple":
+          themeColor = "#800080";
+          bgColor = "#f3e6ff";
+          break;
+      }
+
+      document.body.style.backgroundColor = bgColor;
+      document.querySelector(".generate-btn").style.backgroundColor = themeColor;
+      document.getElementById("title").style.color = themeColor;
+
+      QRCode.toDataURL(text, { width: 256, margin: 1 }, function (err, dataUrl) {
         if (err) return console.error(err);
         const img = document.createElement('img');
-        img.src = url;
+        img.src = dataUrl;
         output.appendChild(img);
       });
     }
+
+    // Language override by URL or fallback to browser language
+    (function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const langParam = urlParams.get("lang") || navigator.language;
+      const langKey = langParam.startsWith("zh-TW") || langParam.startsWith("zh-HK") ? "zh-Hant" :
+                      langParam.startsWith("zh") ? "zh-CN" :
+                      langParam.startsWith("ja") ? "ja" :
+                      langParam.startsWith("ko") ? "ko" :
+                      "en";
+
+      const translations = {
+        "zh-Hant": {
+          title: "qr carer 二維碼產生器",
+          placeholder: "請輸入網址或文字",
+          button: "產生"
+        },
+        "zh-CN": {
+          title: "qr carer 二维码生成器",
+          placeholder: "请输入网址或文字",
+          button: "生成"
+        },
+        "en": {
+          title: "qr carer qrcode make",
+          placeholder: "Please enter url,text",
+          button: "Production"
+        },
+        "ja": {
+          title: "qr carer QRコード作成",
+          placeholder: "URLまたはテキストを入力してください",
+          button: "生成する"
+        },
+        "ko": {
+          title: "qr carer QR코드 생성기",
+          placeholder: "URL 또는 텍스트를 입력하세요",
+          button: "생성"
+        }
+      };
+
+      const t = translations[langKey] || translations["en"];
+      document.getElementById("title").innerText = t.title;
+      document.getElementById("qrText").placeholder = t.placeholder;
+      document.querySelector(".generate-btn").innerText = t.button;
+    })();
   </script>
 </body>
 </html>
