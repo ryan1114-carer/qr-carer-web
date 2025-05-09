@@ -65,7 +65,7 @@
 
       const urlParams = new URLSearchParams(window.location.search);
       const color = urlParams.get("color");
-      const lang = urlParams.get("lang") || navigator.language;
+      const lan = urlParams.get("lan");
 
       let themeColor = "#2eaf4a"; // default green
       let bgColor = "#effff0";
@@ -101,14 +101,13 @@
       });
     }
 
-    // Language override by URL or fallback to browser language
     (function () {
       const urlParams = new URLSearchParams(window.location.search);
-      const langParam = urlParams.get("lang") || navigator.language;
-      const langKey = langParam.startsWith("zh-TW") || langParam.startsWith("zh-HK") ? "zh-Hant" :
-                      langParam.startsWith("zh") ? "zh-CN" :
-                      langParam.startsWith("ja") ? "ja" :
-                      langParam.startsWith("ko") ? "ko" :
+      const lanParam = urlParams.get("lan") || "en";
+      const langKey = lanParam === "zh-Hant" || lanParam === "zh-TW" || lanParam === "zh-HK" ? "zh-Hant" :
+                      lanParam === "zh-CN" ? "zh-CN" :
+                      lanParam === "ja" ? "ja" :
+                      lanParam === "ko" ? "ko" :
                       "en";
 
       const translations = {
